@@ -519,7 +519,7 @@ Status NvmFile::Read(
   // Now we know that: '0 < n <= nbytes_from_offset'
 
   uint64_t aligned_offset = offset - offset % align_nbytes_;
-  uint64_t aligned_n = (((n + align_nbytes_ - 1) / align_nbytes_)) * align_nbytes_;
+  uint64_t aligned_n = (((offset % align_nbytes_ + n + align_nbytes_ - 1) / align_nbytes_)) * align_nbytes_;
   uint64_t skip_head_nbytes = offset - aligned_offset;
   uint64_t skip_tail_nbytes = aligned_n - n;
 
