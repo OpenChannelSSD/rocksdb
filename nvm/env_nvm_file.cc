@@ -38,6 +38,7 @@ NvmFile::NvmFile(
     stripe_nbytes_(), blk_nbytes_(), blks_(), lu_bound_(8) {
   NVM_DBG(this, "mpath_:" << mpath_);
 
+  struct nvm_dev *dev = env_->store_->GetDev();
   const struct nvm_geo *geo = nvm_dev_get_geo(env_->store_->GetDev());
 
   if (env_->posix_->FileExists(mpath_).ok()) {          // Read meta from file
@@ -76,7 +77,7 @@ NvmFile::NvmFile(
 
   buf_nbytes_ = 0;                              // Setup buffer
   buf_nbytes_max_ = lu_bound_ * stripe_nbytes_;
-  buf_ = (char*)nvm_buf_alloc(geo, buf_nbytes_max_);
+  buf_ = (char*)nvm_buf_alloc(dev, buf_nbytes_max_, NULL);
   if (!buf_) {
     NVM_DBG(this, "FAILED: allocating buffer");
     throw std::runtime_error("FAILED: allocating buffer");

@@ -89,7 +89,6 @@ LIB_SOURCES =                                                   \
   nvm/env_nvm_file.cc                                           \
   port/stack_trace.cc                                           \
   port/port_posix.cc                                            \
-  port/stack_trace.cc                                           \
   table/adaptive_table_factory.cc                               \
   table/block.cc                                                \
   table/block_based_filter_block.cc                             \
