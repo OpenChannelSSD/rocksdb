@@ -18,7 +18,10 @@ set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -DOS_LINUX")
 
 set(HEADER_FILES
   args.h
-  env_nvm.h)
+  env_nvm.h
+  ox_host.h
+  tests/catch.hpp
+)
 
 set(SOURCE_FILES
   env_nvm.cc
@@ -55,20 +58,33 @@ if (NOT EXISTS $LIB_RDB)
   get_filename_component(LIB_RDB "../librocksdb.a" ABSOLUTE)
 endif()
 
-find_library(LIBLIGHTNVM NAMES lightnvm)
+link_directories(/home/phrv/ox-ctrl/build)
+set (EXTRA_LIBS ox-fabrics-host ox-host-nvme ox-util ox-transport-fabrics-tgt)
 
 add_executable(env_nvm_t01 ${HEADER_FILES} ${SOURCE_FILES_T01})
 target_link_libraries(env_nvm_t01 pthread
-	rt gflags z bz2 zstd snappy ${LIB_RDB} pthread ${LIBLIGHTNVM})
+	rt gflags z bz2 zstd snappy ${LIB_RDB} pthread ${EXTRA_LIBS})
 
 add_executable(env_nvm_t02 ${HEADER_FILES} ${SOURCE_FILES_T02})
 target_link_libraries(env_nvm_t02 pthread
-	rt gflags z bz2 zstd snappy ${LIB_RDB} pthread ${LIBLIGHTNVM})
+	rt gflags z bz2 zstd snappy ${LIB_RDB} pthread ${EXTRA_LIBS})
 
-add_executable(env_nvm_t03 ${HEADER_FILES} ${SOURCE_FILES_T03})
+add_executable(env_nvm_t03 ${HEADER_FILES}  ${SOURCE_FILES_T03})
 target_link_libraries(env_nvm_t03 pthread
-	rt gflags z bz2 zstd snappy ${LIB_RDB} pthread ${LIBLIGHTNVM})
+	rt gflags z bz2 zstd snappy ${LIB_RDB} pthread ${EXTRA_LIBS})
+
+set(SOURCE_FILES_TESTS
+  env_nvm.cc
+  env_nvm_store.cc
+  env_nvm_file.cc
+  tests/tests.cc)
+
+add_executable(env_nvm_tests ${HEADER_FILES}  ${SOURCE_FILES_TESTS})
+target_link_libraries(env_nvm_tests pthread
+	rt gflags z bz2 zstd snappy ${LIB_RDB} pthread ${EXTRA_LIBS})
 
 install(TARGETS env_nvm_t01 DESTINATION bin)
 install(TARGETS env_nvm_t02 DESTINATION bin)
 install(TARGETS env_nvm_t03 DESTINATION bin)
+install(TARGETS env_nvm_tests DESTINATION bin)
+
