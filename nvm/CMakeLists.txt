@@ -58,7 +58,7 @@ if (NOT EXISTS $LIB_RDB)
   get_filename_component(LIB_RDB "../librocksdb.a" ABSOLUTE)
 endif()
 
-link_directories(/home/phrv/ox-ctrl/build)
+link_directories(/home/$ENV{HOME}/ox-ctrl/build)
 set (EXTRA_LIBS ox-fabrics-host ox-host-nvme ox-util ox-transport-fabrics-tgt)
 
 add_executable(env_nvm_t01 ${HEADER_FILES} ${SOURCE_FILES_T01})
